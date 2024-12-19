@@ -2,6 +2,7 @@
 import React from 'react';
 import { Todo } from '../types/Todo';
 import classNames from 'classnames';
+import { USER_ID } from '../api/todos';
 
 interface Props {
   todo: Todo;
@@ -9,11 +10,17 @@ interface Props {
   onDelete: (n: number) => void;
 }
 
-export const TodoElem: React.FC<Props> = ({ todo, onUpdate, onDelete }) => {
+export const TodoElem: React.FC<Props> = ({
+  todo: { id, title, completed },
+  onUpdate,
+  onDelete,
+}) => {
   const handleChangeCheckbox = () => {
     onUpdate({
-      ...todo,
-      completed: !todo.completed,
+      id,
+      userId: USER_ID,
+      title,
+      completed: !completed,
     });
   };
 
@@ -21,7 +28,7 @@ export const TodoElem: React.FC<Props> = ({ todo, onUpdate, onDelete }) => {
     <div
       data-cy="Todo"
       className={classNames('todo', {
-        completed: todo.completed,
+        completed: completed,
       })}
     >
       <label className="todo__status-label">
@@ -29,20 +36,20 @@ export const TodoElem: React.FC<Props> = ({ todo, onUpdate, onDelete }) => {
           data-cy="TodoStatus"
           type="checkbox"
           className="todo__status"
-          checked={todo.completed}
+          checked={completed}
           onChange={handleChangeCheckbox}
         />
       </label>
 
       <span data-cy="TodoTitle" className="todo__title">
-        {todo.title}
+        {title}
       </span>
 
       <button
         type="button"
         className="todo__remove"
         data-cy="TodoDelete"
-        onClick={() => onDelete(todo.id)}
+        onClick={() => onDelete(id)}
       >
         ×
       </button>
